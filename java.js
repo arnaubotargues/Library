@@ -5,7 +5,12 @@ function Book(name,author, date){
     this.id= crypto.randomUUID();
     this.author = author;
     this.date = date;
+    this.read= this.read;
     
+Book.prototype.toggleRead = function() {
+    this.read = !this.read;
+}
+
 }
 
 
@@ -15,9 +20,8 @@ function addBookToLibrary(name,author, date){
 const book1 = new Book(name,author,date);
 myLibrary.push(book1);
 }
-addBookToLibrary("The last Kingdom", "Barret", 2011);
-addBookToLibrary("El señor de los anillos","Tolkien",1954);
 
+selectBook(myLibrary)
 
 function selectBook(library){
     let i ;
@@ -26,26 +30,63 @@ function selectBook(library){
     for (i = 0; i< library.length;i++){
         let llibre= library[i];
         let llibres = document.createElement("div");
-
+       
         llibres.innerHTML=`
         <h3> ${llibre.name}</h3>
         <p> Author: ${llibre.author}</p>
         <p> Date: ${llibre.date}</p>`
-        container.appendChild(llibres)     
-    }         
+           container.appendChild(llibres)  
+    }      
 }
 
-let button = document.querySelector(".llibrenou");
+const container = document.querySelector(".container")
+const llibreNou = document.querySelector(".llibrenou")
+llibreNou.addEventListener("click",() => {
+    
+    let nom = prompt("introudeix nom del llibre")
+    let author =prompt("introudeix nom de lautor")
+    let date = prompt("introudeix la data de creacio")
+    addBookToLibrary(nom,author,date);
+    let newBook = myLibrary[myLibrary.length-1]
+    let llibreActual = document.createElement("div")
+    llibreActual.innerHTML = `
+        <p><strong>Nom:</strong> ${nom}</p>
+        <p><strong>Autor:</strong> ${author}</p>
+        <p><strong>Data:</strong> ${date}</p>
+    `;
+    container.appendChild(llibreActual)
 
-button.addEventListener("click", () => {
+    let readStatus = document.createElement("button")
+    readStatus.innerText= "No llegit"
+    llibreActual.appendChild(readStatus)
 
-    let name = prompt("Introdueix el nom del llibre");
-    let author = prompt("Introdueix el nom de l'autor");
-    let date = prompt("Introdueix la data de creació");
-    let newBook = new Book (name,author,date);
-    myLibrary.push(newBook);
-    selectBook(myLibrary)
+    readStatus.addEventListener("click",() =>{
+        newBook.toggleRead();
+        if(newBook.read == true){
+            readStatus.innerText="LLegit"
+            readStatus.style.backgroundColor="green"
+        }else{
+        readStatus.innerText="No llegit"
+        readStatus.style.backgroundColor=""
+        }
+        
+    })
+    const removeButton = document.createElement("button")
+    removeButton.innerText="Remove"
+    removeButton.style.backgroundColor="red"
+    llibreActual.appendChild(removeButton)
+
+    removeButton.addEventListener("click",() =>{
+        llibreActual.innerHTML="";
+        
+    })
 })
+
+
+
+
+
+
 
 
 
